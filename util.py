@@ -16,9 +16,9 @@ def main():
     usage += '\n'+main.__doc__
     parser = OptionParser(usage=usage)
     parser.add_option(
-        "-n", "--deletion_rate",
-        help="Delete every nth line [default: %default] ",
-        action="store", dest='deletion_rate', type=float, default=2)
+        "-o", "--option1",
+        help="Description of the option [default: %default] ",
+        action="store", dest='option1', type=float, default=2)
 
     (options, args) = parser.parse_args()
 
