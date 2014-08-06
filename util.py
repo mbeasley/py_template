@@ -1,50 +1,35 @@
-from optparse import OptionParser
+import argparse
+import fileinput
 import sys
 
 def main():
-    r"""
-    DESCRIPTION
-    -----------
-    Put the description of what the utility does here.
-
-    EXAMPLES
-    --------
-    Describe example usage here.
-    python util.py [options] [file]
+    epilog = r"""
     """
-    usage = "usage: %prog [options] dataset"
-    usage += '\n'+main.__doc__
-    parser = OptionParser(usage=usage)
-    parser.add_option(
-        "-o", "--option1",
-        help="Description of the option [default: %default] ",
-        action="store", dest='option1', type=float, default=2)
 
-    (options, args) = parser.parse_args()
+    parser = argparse.ArgumentParser(
+        description=globals()['__doc__'], epilog=epilog,
+        formatter_class=argparse.RawDescriptionHelpFormatter)
 
-    ### Parse args
-    # Raise an exception if the length of args is greater than 1
-    assert len(args) <= 1
-    infilename = args[0] if args else None
+    parser.add_argument(
+        'infile', nargs='?', type=argparse.FileType('r'), default=sys.stdin,
+        help='process this file or read from stdin')
+    parser.add_argument(
+        '-o', '--out', default=sys.stdout, type=argparse.FileType('w'),
+        help='write to this file rather than sys.stdout')
 
-    ## Get the infile
-    if infilename:
-        infile = open(infilename, 'r')
-    else:
-        infile = sys.stdin
+    args = parser.parse_args()
 
     ## Call the function that does the real work
-    run(infile, sys.stdout, options)
+    run(args.out, args)
 
     ## Close the infile iff not stdin
-    if infilename:
-        infile.close()
+    fileinput.close()
 
-def run(infile, outfile, options):
+def run(outfile, args):
     """
     Describe what's actually being done
     """
-    for linenumber, line in enumerate(infile):
+    for line in fileinput.input():
         outfile.write(line)
 
 if __name__=='__main__':
